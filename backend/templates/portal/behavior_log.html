@@ -1,0 +1,38 @@
+{% extends "portal/base.html" %}
+{% block title %}Log Behavior{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Log Behavior — {{ student.full_name }}</h1>
+<form method="post" class="col-md-6">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Date</label>
+    <input type="date" name="incident_date" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Type</label>
+    <select name="incident_type" class="form-select">
+      <option value="positive">Positive</option>
+      <option value="minor">Minor Infraction</option>
+      <option value="major">Major Infraction</option>
+      <option value="suspension">Suspension</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Description</label>
+    <textarea name="description" class="form-control" rows="3" required></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Location</label>
+    <input type="text" name="location" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Consequence</label>
+    <textarea name="consequence" class="form-control" rows="2"></textarea>
+  </div>
+  <div class="form-check mb-3">
+    <input type="checkbox" name="parent_visible" class="form-check-input" id="pv" checked>
+    <label class="form-check-label" for="pv">Visible to parent/student</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

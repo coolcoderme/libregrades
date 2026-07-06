@@ -1,0 +1,30 @@
+{% extends "portal/base.html" %}
+{% block title %}Two-factor authentication{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Two-factor authentication</h1>
+{% if enabled %}
+<p class="text-success">2FA is enabled on your account.</p>
+<form method="post" class="col-md-6">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="disable">
+  <div class="mb-3">
+    <label class="form-label">Enter code to disable</label>
+    <input type="text" name="token" class="form-control" inputmode="numeric" autocomplete="one-time-code" required>
+  </div>
+  <button type="submit" class="btn btn-danger">Disable 2FA</button>
+</form>
+{% else %}
+<p>Scan this QR code with your authenticator app, then enter a code to enable.</p>
+{% if qr_b64 %}<img src="data:image/png;base64,{{ qr_b64 }}" alt="QR code" class="mb-3" style="max-width:200px">{% endif %}
+<p class="small text-muted">Manual key: <code>{{ secret }}</code></p>
+<form method="post" class="col-md-6">
+  {% csrf_token %}
+  <input type="hidden" name="action" value="enable">
+  <div class="mb-3">
+    <label class="form-label">Verification code</label>
+    <input type="text" name="token" class="form-control" inputmode="numeric" autocomplete="one-time-code" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Enable 2FA</button>
+</form>
+{% endif %}
+{% endblock %}

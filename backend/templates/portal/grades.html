@@ -1,0 +1,54 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Grades{% endblock %}
+
+{% block content %}
+
+<h1 class="h3 mb-4">Grades — {{ student.full_name }}</h1>
+
+<p class="mb-3">
+
+  <a href="{% url 'portal:report_card_student' student.id %}" class="btn btn-outline-primary btn-sm">Download report card (PDF)</a>
+
+</p>
+
+<table class="table table-striped">
+
+  <thead>
+
+    <tr><th>Course</th><th>Assignment</th><th>Due</th><th>Score</th><th>%</th><th>Comment</th></tr>
+
+  </thead>
+
+  <tbody>
+
+    {% for g in grades %}
+
+    <tr>
+
+      <td>{{ g.assignment.section.course.code }}</td>
+
+      <td>{{ g.assignment.title }}</td>
+
+      <td>{{ g.assignment.due_date|default:"—" }}</td>
+
+      <td>{% if g.points != None %}{{ g.points }}/{{ g.assignment.max_points }}{% elif g.is_missing %}Missing{% else %}—{% endif %}</td>
+
+      <td>{% if g.percentage %}{{ g.percentage|floatformat:1 }}%{% else %}—{% endif %}</td>
+
+      <td class="small text-muted">{{ g.comment|default:"—" }}</td>
+
+    </tr>
+
+    {% empty %}
+
+    <tr><td colspan="6" class="text-muted">No posted grades yet.</td></tr>
+
+    {% endfor %}
+
+  </tbody>
+
+</table>
+
+{% endblock %}
+

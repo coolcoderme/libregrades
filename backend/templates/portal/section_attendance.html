@@ -1,0 +1,40 @@
+{% extends "portal/base.html" %}
+{% block title %}Attendance Entry{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Attendance — {{ section.course.code }}</h1>
+<form method="get" class="mb-3 row g-2 align-items-end">
+  <div class="col-auto">
+    <label class="form-label">Date</label>
+    <input type="date" name="date" value="{{ date }}" class="form-control" onchange="this.form.submit()">
+  </div>
+</form>
+<table class="table">
+  <thead><tr><th>Student</th><th>Current</th><th>Update</th></tr></thead>
+  <tbody>
+    {% for student, record in student_rows %}
+    <tr>
+      <td>{{ student.full_name }}</td>
+      <td>
+        {% if record %}
+          {% if record.code == 'P' %}Present{% elif record.code == 'A' %}Absent{% elif record.code == 'T' %}Tardy{% elif record.code == 'E' %}Excused{% else %}{{ record.code }}{% endif %}
+        {% else %}—{% endif %}
+      </td>
+      <td>
+        <form method="post" action="{% url 'portal:section_attendance_submit' section.id %}" class="d-flex gap-1">
+          {% csrf_token %}
+          <input type="hidden" name="student_id" value="{{ student.id }}">
+          <input type="hidden" name="date" value="{{ date }}">
+          <select name="code" class="form-select form-select-sm" style="width:auto">
+            <option value="P" {% if record and record.code == 'P' %}selected{% endif %}>Present</option>
+            <option value="A" {% if record and record.code == 'A' %}selected{% endif %}>Absent</option>
+            <option value="T" {% if record and record.code == 'T' %}selected{% endif %}>Tardy</option>
+            <option value="E" {% if record and record.code == 'E' %}selected{% endif %}>Excused</option>
+          </select>
+          <button type="submit" class="btn btn-sm btn-primary">Save</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

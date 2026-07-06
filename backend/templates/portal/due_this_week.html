@@ -1,0 +1,41 @@
+{% extends "portal/base.html" %}
+{% block title %}Due this week{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Due this week — {{ student.full_name }}</h1>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <h2 class="h5">Upcoming assignments</h2>
+    <table class="table table-sm">
+      <thead><tr><th>Course</th><th>Assignment</th><th>Due</th></tr></thead>
+      <tbody>
+        {% for a in upcoming %}
+        <tr>
+          <td>{{ a.section.course.code }}</td>
+          <td>{{ a.title }}</td>
+          <td>{{ a.due_date }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="text-muted">Nothing due in the next 7 days.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col-lg-5">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="card-subtitle text-muted">Missing work</h6>
+        <p class="display-6 mb-0">{{ missing_count }}</p>
+      </div>
+    </div>
+    <h2 class="h6">Recent posted grades</h2>
+    <ul class="list-group list-group-flush">
+      {% for g in recent_grades %}
+      <li class="list-group-item px-0">{{ g.assignment.section.course.code }} — {{ g.assignment.title }}: {% if g.points != None %}{{ g.points }}/{{ g.assignment.max_points }}{% else %}—{% endif %}</li>
+      {% empty %}
+      <li class="list-group-item px-0 text-muted">No recent grades.</li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'portal:report_card' student.id %}" class="btn btn-outline-primary btn-sm mt-3">Download report card (PDF)</a>
+  </div>
+</div>
+{% endblock %}

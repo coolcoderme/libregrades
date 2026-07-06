@@ -1,0 +1,27 @@
+{% extends "portal/base.html" %}
+{% block title %}Conference slots{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Parent conference slots</h1>
+<form method="post" action="{% url 'portal:conference_create' %}" class="row g-2 mb-4 col-lg-8">
+  {% csrf_token %}
+  <div class="col-md-4"><input type="datetime-local" name="start_at" class="form-control" required></div>
+  <div class="col-md-4"><input type="datetime-local" name="end_at" class="form-control" required></div>
+  <div class="col-md-3"><input type="text" name="location" class="form-control" placeholder="Location"></div>
+  <div class="col-md-1"><button type="submit" class="btn btn-primary w-100">Add</button></div>
+</form>
+<table class="table">
+  <thead><tr><th>When</th><th>Location</th><th>Status</th><th>Student</th></tr></thead>
+  <tbody>
+    {% for s in slots %}
+    <tr>
+      <td>{{ s.start_at|date:"M j, g:i A" }} – {{ s.end_at|date:"g:i A" }}</td>
+      <td>{{ s.location|default:"—" }}</td>
+      <td>{% if s.is_booked %}<span class="badge bg-success">Booked</span>{% else %}<span class="badge bg-secondary">Open</span>{% endif %}</td>
+      <td>{% if s.student %}{{ s.student.full_name }}{% else %}—{% endif %}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-muted">No slots yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

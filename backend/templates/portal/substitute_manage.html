@@ -1,0 +1,40 @@
+{% extends "portal/base.html" %}
+{% block title %}Substitute passes{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Substitute passes</h1>
+{% if new_pass %}
+<div class="alert alert-success">New code for {{ new_pass.valid_date }}: <strong class="fs-5">{{ new_pass.access_code }}</strong></div>
+{% endif %}
+<form method="post" class="mb-4 col-lg-8">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Valid date</label>
+    <input type="date" name="valid_date" class="form-control" value="{{ today|default:'' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Sections</label>
+    {% for s in sections %}
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="section_ids" value="{{ s.id }}" id="sec{{ s.id }}">
+      <label class="form-check-label" for="sec{{ s.id }}">{{ s.course.code }} — Section {{ s.section_number }}</label>
+    </div>
+    {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-primary">Generate code</button>
+</form>
+<table class="table table-sm">
+  <thead><tr><th>Date</th><th>Code</th><th>Sections</th><th>Active</th></tr></thead>
+  <tbody>
+    {% for p in passes %}
+    <tr>
+      <td>{{ p.valid_date }}</td>
+      <td><code>{{ p.access_code }}</code></td>
+      <td>{% for s in p.sections.all %}{{ s.course.code }} {% endfor %}</td>
+      <td>{% if p.is_active %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-muted">No passes yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

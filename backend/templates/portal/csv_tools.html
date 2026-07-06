@@ -1,0 +1,48 @@
+{% extends "portal/base.html" %}
+{% block title %}CSV tools{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">CSV import / export</h1>
+{% if result %}
+<div class="alert alert-info">Created: {{ result.created }}, updated: {{ result.updated }}{% if result.errors %}, errors: {{ result.errors|length }}{% endif %}</div>
+{% endif %}
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6">Import students</h2>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="import_students">
+          <input type="file" name="file" accept=".csv" class="form-control mb-2" required>
+          <button type="submit" class="btn btn-primary btn-sm">Import</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6">Import enrollments</h2>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="import_enrollments">
+          <input type="file" name="file" accept=".csv" class="form-control mb-2" required>
+          <button type="submit" class="btn btn-primary btn-sm">Import</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h6">Export students</h2>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="export_students">
+          <button type="submit" class="btn btn-outline-secondary btn-sm">Download CSV</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

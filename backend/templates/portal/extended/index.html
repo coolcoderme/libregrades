@@ -1,0 +1,38 @@
+{% extends "portal/base.html" %}
+{% block title %}All features{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <h1>{{ page_title|default:"Extended features" }}</h1>
+  <p class="lead">
+    {% if wave4 %}Wave 4 — 95 production-depth features{% elif wave3 %}Integrations, AI tools, compliance, and platform features{% elif page_title %}Advanced grading, analytics, and operations{% else %}Rubrics, scheduling, PBIS, reports, and more{% endif %}
+  </p>
+  <div class="wave-tabs">
+    <a href="{% url 'portal:features_index' %}" class="wave-tab wave-tab-w1 {% if not page_title and not wave3 and not wave4 %}active{% endif %}">Wave 1</a>
+    <a href="{% url 'portal:advanced_features_index' %}" class="wave-tab wave-tab-w2 {% if page_title and not wave3 and not wave4 %}active{% endif %}">Advanced</a>
+    <a href="{% url 'portal:wave3_features_index' %}" class="wave-tab wave-tab-w3 {% if wave3 %}active{% endif %}">Wave 3</a>
+    <a href="{% url 'portal:wave4_features_index' %}" class="wave-tab wave-tab-w4 {% if wave4 %}active{% endif %}">Wave 4</a>
+  </div>
+</div>
+
+<div class="mb-4">
+  <input type="search" id="feature-filter" class="form-control feature-search" placeholder="Filter features…" autocomplete="off">
+</div>
+
+<div class="row g-3" id="feature-grid">
+  {% for group in groups %}
+  <div class="col-md-6 col-lg-4 feature-group" data-group="{{ group.title|lower }}">
+    <div class="card h-100 feature-card feature-accent-{% cycle '0' '1' '2' '3' '4' '5' %}">
+      <div class="card-header">{{ group.title }}</div>
+      <ul class="list-group list-group-flush">
+        {% for f in group.features %}
+        <li class="list-group-item d-flex justify-content-between align-items-center feature-item" data-label="{{ f.label|lower }}">
+          <a href="{% url f.url_name %}">{{ f.label }}</a>
+          <span class="feature-num">{{ f.num }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

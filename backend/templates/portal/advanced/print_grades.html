@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}
+{% block title %}Print grades{% endblock %}
+{% block content %}
+<div class="d-none d-print-block"><h1>LibreGrades — Grade report</h1></div>
+<style>@media print { .navbar, footer, .btn { display: none !important; } }</style>
+<h1 class="h3 d-print-none">Print-optimized grade view</h1>
+{% if student %}
+<p><strong>{{ student.full_name }}</strong> ({{ student.student_id }})</p>
+<table class="table table-bordered">
+  <thead><tr><th>Course</th><th>Assignment</th><th>Score</th></tr></thead>
+  <tbody>
+    {% for g in grades %}
+    <tr><td>{{ g.assignment.section.course.code }}</td><td>{{ g.assignment.title }}</td><td>{{ g.points }}</td></tr>
+    {% empty %}
+    <tr><td colspan="3">No grades.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<button class="btn btn-primary d-print-none" onclick="window.print()">Print</button>
+{% else %}
+<p class="text-muted">Select a student context to print grades.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "portal/base.html" %}
+{% block title %}Book conference{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Book a conference</h1>
+<table class="table">
+  <thead><tr><th>Teacher</th><th>When</th><th>Location</th><th></th></tr></thead>
+  <tbody>
+    {% for s in slots %}
+    <tr>
+      <td>{{ s.teacher.display_name }}</td>
+      <td>{{ s.start_at|date:"M j, g:i A" }}</td>
+      <td>{{ s.location|default:"—" }}</td>
+      <td>
+        <form method="post" action="{% url 'portal:conference_book' s.id %}" class="d-flex gap-2">
+          {% csrf_token %}
+          <select name="student_id" class="form-select form-select-sm" required>
+            {% for c in children %}<option value="{{ c.id }}">{{ c.full_name }}</option>{% endfor %}
+          </select>
+          <button type="submit" class="btn btn-sm btn-primary">Book</button>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-muted">No open slots.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

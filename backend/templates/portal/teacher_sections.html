@@ -1,0 +1,59 @@
+{% extends "portal/base.html" %}
+{% block title %}My Sections{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <h1>My Sections</h1>
+  <p class="lead">Open gradebooks and teaching tools for each class</p>
+</div>
+
+<div class="row g-3">
+  {% for section in sections %}
+  <div class="col-lg-6">
+    <div class="section-card">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <div>
+          <div class="section-card-code">{{ section.course.code }}</div>
+          <div class="section-card-meta mb-0">{{ section.course.name }}</div>
+        </div>
+        <span class="badge rounded-pill text-bg-light border">Sec {{ section.section_number }} · {{ section.room|default:"TBD" }}</span>
+      </div>
+
+      <div class="mb-2">
+        <small class="text-muted fw-semibold text-uppercase" style="font-size:0.7rem">Primary</small>
+        <div class="action-chips mt-1">
+          <a href="{% url 'portal:gradebook' section.id %}" class="action-chip action-chip-primary">Gradebook</a>
+          <a href="{% url 'portal:section_attendance' section.id %}" class="action-chip action-chip-soft">Attendance</a>
+          <a href="{% url 'portal:adv_quizzes' section.id %}" class="action-chip action-chip-soft">Quizzes</a>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <small class="text-muted fw-semibold text-uppercase" style="font-size:0.7rem">Grading tools</small>
+        <div class="action-chips mt-1">
+          <a href="{% url 'portal:ext_rubrics' section.id %}" class="action-chip action-chip-soft">Rubrics</a>
+          <a href="{% url 'portal:ext_weighting' section.id %}" class="action-chip action-chip-soft">Weights</a>
+          <a href="{% url 'portal:ext_bulk_grade' section.id %}" class="action-chip action-chip-soft">Bulk entry</a>
+          <a href="{% url 'portal:ext_omr' section.id %}" class="action-chip action-chip-soft">OMR scan</a>
+          <a href="{% url 'portal:w3_grade_anomaly' section.id %}" class="action-chip action-chip-soft">Anomalies</a>
+        </div>
+      </div>
+
+      <div>
+        <small class="text-muted fw-semibold text-uppercase" style="font-size:0.7rem">More</small>
+        <div class="action-chips mt-1">
+          <a href="{% url 'portal:adv_seating' section.id %}" class="action-chip action-chip-more">Seating</a>
+          <a href="{% url 'portal:w3_quiz_player' section.id %}" class="action-chip action-chip-more">Quiz player</a>
+          <a href="{% url 'portal:w3_project_groups' section.id %}" class="action-chip action-chip-more">Groups</a>
+          <a href="{% url 'portal:w4_posting_preview' section.id %}" class="action-chip action-chip-more">Preview</a>
+          <a href="{% url 'portal:w4_sub_lesson_pack' section.id %}" class="action-chip action-chip-more">Sub pack</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="content-panel text-center text-muted py-5">No sections assigned this term.</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

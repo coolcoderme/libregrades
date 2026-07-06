@@ -1,0 +1,52 @@
+{% extends "portal/base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <h1>Global search</h1>
+  <p class="lead">Find students, sections, and assignments across your school</p>
+</div>
+
+<div class="content-panel mb-4">
+  <form method="get">
+    <div class="input-group input-group-lg">
+      <input type="search" name="q" class="form-control feature-search" value="{{ query }}" placeholder="Students, courses, assignments…" autofocus>
+      <button class="btn btn-primary px-4" type="submit">Search</button>
+    </div>
+  </form>
+</div>
+
+{% if query %}
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card h-100 feature-card feature-accent-0">
+      <div class="card-header">Students</div>
+      <ul class="list-group list-group-flush">
+        {% for s in results.students %}
+        <li class="list-group-item">{{ s.full_name }} <small class="text-muted">({{ s.student_id }})</small></li>
+        {% empty %}<li class="list-group-item text-muted">No matches</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 feature-card feature-accent-1">
+      <div class="card-header">Sections</div>
+      <ul class="list-group list-group-flush">
+        {% for s in results.sections %}
+        <li class="list-group-item"><a href="{% url 'portal:gradebook' s.id %}">{{ s.course.code }} — Sec {{ s.section_number }}</a></li>
+        {% empty %}<li class="list-group-item text-muted">No matches</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 feature-card feature-accent-2">
+      <div class="card-header">Assignments</div>
+      <ul class="list-group list-group-flush">
+        {% for a in results.assignments %}
+        <li class="list-group-item">{{ a.section.course.code }} — {{ a.title }}</li>
+        {% empty %}<li class="list-group-item text-muted">No matches</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

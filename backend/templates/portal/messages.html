@@ -1,0 +1,23 @@
+{% extends "portal/base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">Inbox</h1>
+  <a href="{% url 'portal:message_compose' %}" class="btn btn-primary btn-sm">Compose</a>
+</div>
+<table class="table table-hover">
+  <thead><tr><th>From</th><th>Subject</th><th>Student</th><th>Date</th></tr></thead>
+  <tbody>
+    {% for m in messages %}
+    <tr class="{% if not m.is_read %}fw-semibold{% endif %}">
+      <td>{{ m.sender.display_name }}</td>
+      <td>{{ m.subject }}</td>
+      <td>{% if m.student %}{{ m.student.full_name }}{% else %}—{% endif %}</td>
+      <td>{{ m.created_at|date:"M j, Y" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-muted">No messages.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

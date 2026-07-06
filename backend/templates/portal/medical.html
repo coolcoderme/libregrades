@@ -1,0 +1,68 @@
+{% extends "portal/base.html" %}
+{% block title %}Medical{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Medical Information — {{ subject_name }}</h1>
+{% if is_limited_view %}
+<div class="alert alert-info py-2">Limited view: allergies, medications, and conditions only. Immunization and insurance records require elevated access.</div>
+{% endif %}
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Doctor{% if show_sensitive %} & Insurance{% endif %}</div>
+      <div class="card-body">
+        <p><strong>Doctor:</strong> {{ record.doctor_name|default:"—" }} {{ record.doctor_phone }}</p>
+        {% if show_sensitive %}
+        <p><strong>Insurance:</strong> {{ record.insurance_provider|default:"—" }}</p>
+        <p><strong>Policy:</strong> {{ record.insurance_policy|default:"—" }}</p>
+        {% if record.nurse_notes %}<p><strong>Nurse notes:</strong> {{ record.nurse_notes }}</p>{% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Allergies</div>
+      <ul class="list-group list-group-flush">
+        {% for a in allergies %}
+        <li class="list-group-item">{{ a.allergen }} — {{ a.severity }} {% if a.reaction %}({{ a.reaction }}){% endif %}</li>
+        {% empty %}<li class="list-group-item text-muted">None recorded</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Medications</div>
+      <ul class="list-group list-group-flush">
+        {% for m in medications %}
+        <li class="list-group-item">{{ m.name }} — {{ m.dosage }} {{ m.frequency }}</li>
+        {% empty %}<li class="list-group-item text-muted">None recorded</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">Medical Conditions{% if show_immunizations %} & Immunizations{% endif %}</div>
+      <ul class="list-group list-group-flush">
+        {% for c in conditions %}
+        <li class="list-group-item">{{ c.condition }}{% if not c.is_active %} (inactive){% endif %}</li>
+        {% endfor %}
+        {% if show_immunizations %}
+        {% for i in immunizations %}
+        <li class="list-group-item">{{ i.vaccine }} — dose {{ i.dose_number }} ({{ i.date_administered|default:"—" }})</li>
+        {% endfor %}
+        {% endif %}
+        {% if not conditions and not show_immunizations %}
+        <li class="list-group-item text-muted">None recorded</li>
+        {% elif not conditions and show_immunizations and not immunizations %}
+        <li class="list-group-item text-muted">No conditions or immunizations recorded</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% if student and is_limited_view %}
+<p class="mt-3">
+  <a href="{% url 'portal:emergency_student' student.id %}" class="btn btn-outline-primary btn-sm">Emergency contacts</a>
+</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "portal/base.html" %}
+{% block title %}Grade posting windows{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Grade posting windows</h1>
+<form method="post" class="row g-2 mb-4 col-lg-10">
+  {% csrf_token %}
+  <div class="col-md-2">
+    <select name="term_id" class="form-select" required>
+      {% for t in terms %}<option value="{{ t.id }}">{{ t.name }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2"><input type="text" name="name" class="form-control" placeholder="Name" required></div>
+  <div class="col-md-3"><input type="datetime-local" name="opens_at" class="form-control" required></div>
+  <div class="col-md-3"><input type="datetime-local" name="closes_at" class="form-control" required></div>
+  <div class="col-md-2"><button type="submit" class="btn btn-primary w-100">Add window</button></div>
+</form>
+<table class="table">
+  <thead><tr><th>Term</th><th>Name</th><th>Opens</th><th>Closes</th></tr></thead>
+  <tbody>
+    {% for w in windows %}
+    <tr>
+      <td>{{ w.term.name }}</td>
+      <td>{{ w.name }}</td>
+      <td>{{ w.opens_at|date:"M j, Y g:i A" }}</td>
+      <td>{{ w.closes_at|date:"M j, Y g:i A" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-muted">No posting windows configured (grades publish anytime).</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

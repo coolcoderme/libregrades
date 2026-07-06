@@ -1,0 +1,22 @@
+<form hx-post="{% url 'portal:gradebook_update' section.id %}"
+
+      hx-target="closest td" hx-swap="innerHTML" class="d-inline">
+
+  {% csrf_token %}
+
+  <input type="hidden" name="student_id" value="{{ grade.student_id }}">
+
+  <input type="hidden" name="assignment_id" value="{{ assignment.id }}">
+
+  <input type="number" step="0.01" name="points" class="form-control form-control-sm text-center mb-1"
+
+         value="{% if grade.points != None %}{{ grade.points }}{% endif %}"
+
+         placeholder="—" style="width:70px">
+
+  <input type="text" name="comment" class="form-control form-control-sm" style="width:100px"
+
+         value="{{ grade.comment }}" placeholder="Comment">
+
+</form>
+

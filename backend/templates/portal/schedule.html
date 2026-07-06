@@ -1,0 +1,20 @@
+{% extends "portal/base.html" %}
+{% block title %}Schedule{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Schedule — {{ student.full_name }}</h1>
+<table class="table">
+  <thead><tr><th>Period</th><th>Course</th><th>Teacher</th><th>Room</th></tr></thead>
+  <tbody>
+    {% for e in enrollments %}
+    <tr>
+      <td>{% if e.section.period %}{{ e.section.period.name|default:"—" }}{% else %}—{% endif %}</td>
+      <td>{{ e.section.course.code }} — {{ e.section.course.name }}</td>
+      <td>{{ e.section.teacher.get_full_name|default:"TBD" }}</td>
+      <td>{{ e.section.room|default:"—" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-muted">No enrollments.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

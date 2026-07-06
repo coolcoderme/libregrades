@@ -1,0 +1,20 @@
+{% extends "portal/base.html" %}
+{% block title %}Parent dashboard{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">All children overview</h1>
+<div class="row g-3">
+  {% for card in children_cards %}
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h5">{{ card.name }}</h2>
+        <p class="mb-1">Missing: <strong>{{ card.missing }}</strong></p>
+        <p class="mb-1">Recent avg: <strong>{{ card.avg|default:"—" }}</strong></p>
+        <a href="{% url 'portal:dashboard' %}?child={{ card.id }}" class="btn btn-sm btn-primary">Open dashboard</a>
+        <a href="{% url 'portal:due_this_week_student' card.id %}" class="btn btn-sm btn-outline-secondary">Due this week</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

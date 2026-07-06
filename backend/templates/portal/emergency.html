@@ -1,0 +1,22 @@
+{% extends "portal/base.html" %}
+{% block title %}Emergency Contacts{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Emergency Contacts — {{ student.full_name }}</h1>
+<div class="row g-3">
+  {% for c in contacts %}
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ c.name }} <span class="badge bg-secondary">{{ c.relationship }}</span></h5>
+        <p class="mb-1"><strong>Phone:</strong> {{ c.phone_primary }}{% if c.phone_secondary %} / {{ c.phone_secondary }}{% endif %}</p>
+        {% if c.email %}<p class="mb-1"><strong>Email:</strong> {{ c.email }}</p>{% endif %}
+        {% if c.is_authorized_pickup %}<span class="badge bg-success">Authorized pickup</span>{% endif %}
+        <span class="badge bg-light text-dark">Priority {{ c.priority }}</span>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-muted">No emergency contacts on file.</p>
+  {% endfor %}
+</div>
+{% endblock %}

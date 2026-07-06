@@ -1,0 +1,35 @@
+{% extends "portal/base.html" %}
+{% block title %}New announcement{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">New announcement</h1>
+<form method="post" class="col-lg-8">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label class="form-label">Title</label>
+    <input type="text" name="title" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Body</label>
+    <textarea name="body" class="form-control" rows="5" required></textarea>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Scope</label>
+    <select name="scope" class="form-select">
+      <option value="school">School-wide</option>
+      <option value="district">District-wide</option>
+      <option value="section">Class section</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Section (if class scope)</label>
+    <select name="section_id" class="form-select">
+      <option value="">—</option>
+      {% for s in sections %}
+      <option value="{{ s.id }}">{{ s.course.code }} — Section {{ s.section_number }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Publish</button>
+  <a href="{% url 'portal:announcements' %}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+{% endblock %}

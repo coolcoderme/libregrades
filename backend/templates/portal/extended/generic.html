@@ -1,0 +1,71 @@
+{% extends "portal/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-hero mb-4">
+  <h1>{{ title }}</h1>
+  {% if description %}<p class="lead">{{ description }}</p>{% endif %}
+</div>
+
+{% if alert %}
+<div class="alert alert-{{ alert.type|default:'info' }} border-0 shadow-sm">{{ alert.text }}</div>
+{% endif %}
+{% if messages_html %}{{ messages_html|safe }}{% endif %}
+
+{% if form_fields %}
+<div class="content-panel mb-4">
+  <h2 class="h6 fw-bold text-muted text-uppercase mb-3">Actions</h2>
+  <form method="post" enctype="multipart/form-data" class="row g-3">
+    {% csrf_token %}
+    {% for field in form_fields %}
+    <div class="col-md-{{ field.col|default:4 }}">
+      {% if field.type == 'select' %}
+      <label class="form-label fw-semibold">{{ field.label }}</label>
+      <select name="{{ field.name }}" class="form-select" {% if field.required %}required{% endif %}>
+        {% for opt in field.options %}<option value="{{ opt.value }}">{{ opt.label }}</option>{% endfor %}
+      </select>
+      {% elif field.type == 'textarea' %}
+      <label class="form-label fw-semibold">{{ field.label }}</label>
+      <textarea name="{{ field.name }}" class="form-control" rows="3" {% if field.required %}required{% endif %}></textarea>
+      {% elif field.type == 'file' %}
+      <label class="form-label fw-semibold">{{ field.label }}</label>
+      <input type="file" name="{{ field.name }}" class="form-control" {% if field.required %}required{% endif %}>
+      {% elif field.type == 'checkbox' %}
+      <div class="form-check mt-2">
+        <input class="form-check-input" type="checkbox" name="{{ field.name }}" id="f_{{ field.name }}" {% if field.checked %}checked{% endif %}>
+        <label class="form-check-label" for="f_{{ field.name }}">{{ field.label }}</label>
+      </div>
+      {% elif field.type == 'hidden' %}
+      <input type="hidden" name="{{ field.name }}" value="{{ field.value }}">
+      {% else %}
+      <label class="form-label fw-semibold">{{ field.label }}</label>
+      <input type="{{ field.type|default:'text' }}" name="{{ field.name }}" class="form-control" value="{{ field.value|default:'' }}" {% if field.required %}required{% endif %}>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">{{ submit_label|default:"Save" }}</button>
+    </div>
+  </form>
+</div>
+{% endif %}
+
+{% if columns %}
+<div class="content-panel">
+  <h2 class="h6 fw-bold text-muted text-uppercase mb-3">Records</h2>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead><tr>{% for c in columns %}<th>{{ c }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>
+        {% empty %}
+        <tr><td colspan="{{ columns|length }}" class="text-muted py-4 text-center">No records yet — use the form above to add one.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if extra_html %}{{ extra_html|safe }}{% endif %}
+{% endblock %}

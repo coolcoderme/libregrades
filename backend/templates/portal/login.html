@@ -1,0 +1,56 @@
+{% extends "portal/base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="login-page">
+  <div class="login-split">
+    <div class="login-brand-panel">
+      <h1>LibreGrades</h1>
+      <p class="mb-4">Your district grading portal — grades, attendance, and family communication in one colorful place.</p>
+      <p class="mb-2"><strong>{{ district_name }}</strong></p>
+      <span class="badge bg-white bg-opacity-25 fs-6 px-3 py-2" title="Verify this matches your district">Server {{ server_code }}</span>
+    </div>
+    <div class="login-form-panel">
+      <h2 class="h4 fw-bold mb-1">Sign in</h2>
+      <p class="text-muted small mb-4">Enter your school credentials</p>
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger border-0" role="alert">
+        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+      </div>
+      {% elif form.errors %}
+      <div class="alert alert-danger border-0" role="alert">Incorrect username or password. Please try again.</div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold" for="id_username">Username</label>
+          <input type="text" name="username" id="id_username" class="form-control{% if form.username.errors %} is-invalid{% endif %}"
+                 value="{{ form.username.value|default:'' }}" required autofocus placeholder="e.g. student1">
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold" for="id_password">Password</label>
+          <input type="password" name="password" id="id_password" class="form-control{% if form.password.errors %} is-invalid{% endif %}" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 py-2">Sign in</button>
+      </form>
+
+      {% if sso_google or sso_microsoft %}
+      <div class="text-center my-3 text-muted small">or continue with</div>
+      <div class="d-grid gap-2">
+        {% if sso_google %}
+        <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-outline-secondary">Google</a>
+        {% endif %}
+        {% if sso_microsoft %}
+        <a href="{% url 'social:begin' 'microsoft-graph' %}" class="btn btn-outline-secondary">Microsoft</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <p class="text-center mt-4 mb-0 small text-muted">
+        <a href="{% url 'portal:substitute_login' %}" class="fw-semibold">Substitute teacher access →</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

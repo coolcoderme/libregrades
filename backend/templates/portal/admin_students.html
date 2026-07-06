@@ -1,0 +1,31 @@
+{% extends "portal/base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Student Search</h1>
+<form method="get" class="mb-3">
+  <div class="input-group">
+    <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Name or student ID">
+    <button class="btn btn-primary">Search</button>
+  </div>
+</form>
+<table class="table table-hover">
+  <thead><tr><th>ID</th><th>Name</th><th>Grade</th><th>School</th><th></th></tr></thead>
+  <tbody>
+    {% for s in students %}
+    <tr>
+      <td>{{ s.student_id }}</td>
+      <td>{{ s.full_name }}</td>
+      <td>{{ s.grade_level }}</td>
+      <td>{{ s.school.name }}</td>
+      <td>
+        <a href="{% url 'portal:grades_student' s.id %}" class="btn btn-sm btn-outline-primary">View</a>
+        <a href="{% url 'portal:medical_student' s.id %}" class="btn btn-sm btn-outline-secondary">Medical</a>
+        <a href="{% url 'portal:transcript' s.id %}" class="btn btn-sm btn-outline-success">Transcript</a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="text-muted">No students found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

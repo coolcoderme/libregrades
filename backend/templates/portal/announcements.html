@@ -1,0 +1,26 @@
+{% extends "portal/base.html" %}
+{% block title %}Announcements{% endblock %}
+{% block content %}
+<div class="page-hero d-flex flex-wrap justify-content-between align-items-center gap-3">
+  <div>
+    <h1 class="mb-1">Announcements</h1>
+    <p class="lead mb-0">News and updates from your school</p>
+  </div>
+  {% if role == 'teacher' or role == 'school_admin' or role == 'district_admin' or role == 'counselor' %}
+  <a href="{% url 'portal:announcement_create' %}" class="btn btn-primary">New announcement</a>
+  {% endif %}
+</div>
+
+{% for a in announcements %}
+<div class="content-panel">
+  <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+    <h2 class="h5 fw-bold mb-0">{{ a.title }}</h2>
+    <span class="badge rounded-pill text-bg-primary">{{ a.get_scope_display }}</span>
+  </div>
+  <p class="text-muted small mb-3">{{ a.author.display_name }} · {{ a.created_at|date:"M j, Y g:i A" }}</p>
+  <p class="mb-0">{{ a.body|linebreaksbr }}</p>
+</div>
+{% empty %}
+<div class="content-panel text-center text-muted py-5">No announcements yet.</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "portal/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-hero">
+  <h1>Welcome back, {{ user.display_name|default:user.first_name|default:user.username }}</h1>
+  <p class="lead">{{ district_name }} · {% if role == 'teacher' %}Teacher dashboard{% elif role == 'student' %}Student dashboard{% elif role == 'parent' %}Parent dashboard{% else %}Portal home{% endif %}</p>
+</div>
+
+{% if role == 'parent' and children %}
+<div class="content-panel mb-4">
+  <label class="form-label fw-semibold mb-2">View child</label>
+  <div class="d-flex flex-wrap gap-2">
+    {% for child in children %}
+    <a href="?child={{ child.id }}" class="btn btn-sm {% if student and student.id == child.id %}btn-primary{% else %}btn-outline-primary{% endif %} rounded-pill">
+      {{ child.full_name }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+{% if role == 'teacher' %}
+<div class="quick-link-grid mb-4">
+  <a href="{% url 'portal:teacher_sections' %}" class="quick-link"><span class="quick-link-icon ql-indigo">§</span>Sections</a>
+  <a href="{% url 'portal:announcements' %}" class="quick-link"><span class="quick-link-icon ql-sky">!</span>Announce</a>
+  <a href="{% url 'portal:conferences' %}" class="quick-link"><span class="quick-link-icon ql-emerald">◷</span>Conferences</a>
+  <a href="{% url 'portal:at_risk' %}" class="quick-link"><span class="quick-link-icon ql-amber">⚠</span>At-risk</a>
+  <a href="{% url 'portal:features_index' %}" class="quick-link"><span class="quick-link-icon ql-purple">★</span>Features</a>
+  <a href="{% url 'portal:messages' %}" class="quick-link"><span class="quick-link-icon ql-rose">✉</span>Messages</a>
+</div>
+<div class="row g-3">
+  {% for section in sections %}
+  <div class="col-md-6 col-lg-4">
+    <div class="section-card">
+      <div class="section-card-code">{{ section.course.code }}</div>
+      <div class="section-card-meta">{{ section.course.name }} · Period {% if section.period %}{{ section.period.period_number }}{% else %}—{% endif %}</div>
+      <div class="action-chips">
+        <a href="{% url 'portal:gradebook' section.id %}" class="action-chip action-chip-primary">Gradebook</a>
+        <a href="{% url 'portal:section_attendance' section.id %}" class="action-chip action-chip-soft">Attendance</a>
+        <a href="{% url 'portal:ext_rubrics' section.id %}" class="action-chip action-chip-soft">Rubrics</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><p class="text-muted">No sections assigned this term.</p></div>
+  {% endfor %}
+</div>
+
+{% elif student %}
+<div class="quick-link-grid mb-4">
+  <a href="{% url 'portal:grades' %}" class="quick-link"><span class="quick-link-icon ql-indigo">A</span>Grades</a>
+  <a href="{% url 'portal:due_this_week' %}" class="quick-link"><span class="quick-link-icon ql-amber">⏱</span>Due soon</a>
+  <a href="{% url 'portal:schedule' %}" class="quick-link"><span class="quick-link-icon ql-sky">▦</span>Schedule</a>
+  <a href="{% url 'portal:missing' %}" class="quick-link"><span class="quick-link-icon ql-rose">!</span>Missing</a>
+  <a href="{% url 'portal:attendance' %}" class="quick-link"><span class="quick-link-icon ql-emerald">✓</span>Attendance</a>
+  <a href="{% url 'portal:announcements' %}" class="quick-link"><span class="quick-link-icon ql-purple">📢</span>News</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-lg-3">
+    <div class="card stat-card stat-amber h-100">
+      <div class="card-body">
+        <div class="stat-label">Missing</div>
+        <div class="stat-value">{{ missing_count }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card stat-card stat-emerald h-100">
+      <div class="card-body">
+        <div class="stat-label">Credits earned</div>
+        <div class="stat-value">{{ credit_summary.total_credits }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="content-panel h-100 mb-0">
+      <div class="stat-label text-muted mb-2">Graduation progress</div>
+      <div class="progress mb-2" role="progressbar">
+        <div class="progress-bar" style="width: {{ credit_summary.percent_complete }}%">
+          {{ credit_summary.percent_complete|floatformat:0 }}%
+        </div>
+      </div>
+      <small class="text-muted">{{ credit_summary.total_credits }} / {{ credit_summary.credits_required }} credits required</small>
+    </div>
+  </div>
+</div>
+
+<div class="content-panel">
+  <h2 class="h5 fw-bold mb-3">Recent grades</h2>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead><tr><th>Course</th><th>Assignment</th><th>Score</th></tr></thead>
+      <tbody>
+        {% for g in recent_grades %}
+        <tr>
+          <td><span class="badge rounded-pill text-bg-primary">{{ g.assignment.section.course.code }}</span></td>
+          <td>{{ g.assignment.title }}</td>
+          <td class="fw-semibold">{% if g.points != None %}{{ g.points }}/{{ g.assignment.max_points }}{% else %}—{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3" class="text-muted py-4 text-center">No grades posted yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% else %}
+<div class="content-panel">
+  <p class="mb-0 text-muted">Use the menu above to navigate, or press <kbd class="bg-light border rounded px-2">Ctrl+K</kbd> for quick search.</p>
+</div>
+{% endif %}
+{% endblock %}

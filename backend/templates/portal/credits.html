@@ -1,0 +1,29 @@
+{% extends "portal/base.html" %}
+{% block title %}Credits{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Credits — {{ student.full_name }}</h1>
+<div class="mb-4">
+  <div class="progress mb-2" style="height: 24px">
+    <div class="progress-bar bg-success" style="width: {{ summary.percent_complete }}%">
+      {{ summary.total_credits }} / {{ summary.credits_required }} credits
+    </div>
+  </div>
+  <a href="{% url 'portal:transcript' student.id %}" class="btn btn-outline-primary btn-sm">Download Transcript PDF</a>
+</div>
+<table class="table table-striped">
+  <thead><tr><th>Course</th><th>Term</th><th>Year</th><th>Credits</th><th>Grade</th></tr></thead>
+  <tbody>
+    {% for c in credits %}
+    <tr>
+      <td>{{ c.course.code }} — {{ c.course.name }}</td>
+      <td>{{ c.term_name }}</td>
+      <td>{{ c.school_year }}</td>
+      <td>{{ c.credits }}</td>
+      <td>{{ c.letter_grade }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="text-muted">No credits recorded yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

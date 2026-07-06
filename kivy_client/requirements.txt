@@ -1,0 +1,4 @@
+kivy>=2.3
+kivymd @ https://github.com/kivymd/KivyMD/archive/master.zip
+requests>=2.31
+-e ../shared

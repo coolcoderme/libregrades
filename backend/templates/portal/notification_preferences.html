@@ -1,0 +1,29 @@
+{% extends "portal/base.html" %}
+{% block title %}Email Alerts{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Email Alert Preferences</h1>
+<form method="post" class="col-md-6">
+  {% csrf_token %}
+  <div class="form-check mb-2">
+    <input type="checkbox" name="email_grades" class="form-check-input" id="eg" {% if prefs.email_grades %}checked{% endif %}>
+    <label class="form-check-label" for="eg">Grade posted alerts</label>
+  </div>
+  <div class="form-check mb-2">
+    <input type="checkbox" name="email_missing" class="form-check-input" id="em" {% if prefs.email_missing %}checked{% endif %}>
+    <label class="form-check-label" for="em">Missing assignment alerts</label>
+  </div>
+  <div class="form-check mb-2">
+    <input type="checkbox" name="email_attendance" class="form-check-input" id="ea" {% if prefs.email_attendance %}checked{% endif %}>
+    <label class="form-check-label" for="ea">Attendance alerts</label>
+  </div>
+  <div class="form-check mb-2">
+    <input type="checkbox" name="email_behavior" class="form-check-input" id="eb" {% if prefs.email_behavior %}checked{% endif %}>
+    <label class="form-check-label" for="eb">Behavior incident alerts</label>
+  </div>
+  <div class="form-check mb-3">
+    <input type="checkbox" name="email_digest" class="form-check-input" id="ed" {% if prefs.email_digest %}checked{% endif %}>
+    <label class="form-check-label" for="ed">Weekly digest</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Save preferences</button>
+</form>
+{% endblock %}

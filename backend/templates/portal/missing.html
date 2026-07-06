@@ -1,0 +1,20 @@
+{% extends "portal/base.html" %}
+{% block title %}Missing Assignments{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Missing Assignments — {{ student.full_name }}</h1>
+<table class="table table-hover">
+  <thead><tr><th>Course</th><th>Assignment</th><th>Due Date</th><th>Points</th></tr></thead>
+  <tbody>
+    {% for a in missing %}
+    <tr class="table-warning">
+      <td>{{ a.section.course.code }}</td>
+      <td>{{ a.title }}</td>
+      <td>{{ a.due_date }}</td>
+      <td>{{ a.max_points }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-success">No missing assignments!</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

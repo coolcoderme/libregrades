@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "libregrades-sdk"
+version = "1.0.0"
+description = "LibreGrades API client for Kivy and other clients"
+requires-python = ">=3.10"
+dependencies = ["requests>=2.31"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["libregrades_sdk*"]

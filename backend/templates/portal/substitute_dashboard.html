@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Substitute — {{ district_name }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head><body>
+<nav class="navbar navbar-dark bg-primary"><div class="container-fluid">
+  <span class="navbar-brand">Substitute mode</span>
+  <span class="text-white-50 small">Valid {{ pass_obj.valid_date }}</span>
+</div></nav>
+<main class="container py-4">
+  <h1 class="h4 mb-4">Your sections today</h1>
+  <div class="row g-3">
+    {% for section in sections %}
+    <div class="col-md-4">
+      <div class="card h-100"><div class="card-body">
+        <h2 class="h5">{{ section.course.code }}</h2>
+        <p class="text-muted">{{ section.course.name }}</p>
+        <a href="{% url 'portal:section_attendance' section.id %}" class="btn btn-primary btn-sm">Take attendance</a>
+        <a href="{% url 'portal:gradebook' section.id %}" class="btn btn-outline-secondary btn-sm">View gradebook</a>
+      </div></div>
+    </div>
+    {% endfor %}
+  </div>
+</main>
+</body></html>

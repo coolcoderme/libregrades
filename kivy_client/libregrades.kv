@@ -1,0 +1,203 @@
+#:kivy 2.3.0
+
+<SetupScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "24dp"
+        spacing: "12dp"
+        MDLabel:
+            text: "LibreGrades Setup"
+            halign: "center"
+            font_style: "H5"
+        MDLabel:
+            text: "Enter your district server URL"
+            halign: "center"
+        MDTextField:
+            id: server_input
+            hint_text: "Server URL (e.g. https://grades.yourdistrict.org)"
+            text: root.server_url
+            size_hint_x: 1
+        MDLabel:
+            text: "Enter the 6-digit server code shown on your district login page"
+            halign: "center"
+            font_style: "Caption"
+        MDTextField:
+            id: code_input
+            hint_text: "Server code (6 digits)"
+            text: root.server_code
+            input_filter: "int"
+            maxlength: 6
+            size_hint_x: 1
+        MDLabel:
+            text: root.status
+            theme_text_color: "Error"
+            halign: "center"
+        MDRaisedButton:
+            text: "Save & Continue"
+            pos_hint: {"center_x": 0.5}
+            on_release: root.save_server()
+
+<LoginScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "24dp"
+        spacing: "12dp"
+        MDLabel:
+            text: "LibreGrades"
+            halign: "center"
+            font_style: "H4"
+        MDLabel:
+            text: root.server_label
+            halign: "center"
+            font_style: "Caption"
+        MDTextField:
+            id: username
+            hint_text: "Username"
+        MDTextField:
+            id: password
+            hint_text: "Password"
+            password: True
+        MDLabel:
+            text: root.error
+            theme_text_color: "Error"
+            halign: "center"
+        MDRaisedButton:
+            text: "Sign In"
+            pos_hint: {"center_x": 0.5}
+            on_release: root.do_login()
+        MDFlatButton:
+            text: "Change server"
+            pos_hint: {"center_x": 0.5}
+            on_release: root.manager.current = "setup"
+
+<HomeScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: root.welcome_text
+            right_action_items: [["logout", lambda x: root.logout()]]
+        ScrollView:
+            MDList:
+                OneLineListItem:
+                    text: root.notification_label
+                    on_release: root.go("grades")
+                OneLineListItem:
+                    text: "Grades"
+                    on_release: root.go("grades")
+                OneLineListItem:
+                    text: "Missing Assignments"
+                    on_release: root.go("missing")
+                OneLineListItem:
+                    text: "Schedule"
+                    on_release: root.go("schedule")
+                OneLineListItem:
+                    text: "Credits"
+                    on_release: root.go("credits")
+                OneLineListItem:
+                    text: "Attendance"
+                    on_release: root.go("schedule")
+                OneLineListItem:
+                    text: "Behavior"
+                    on_release: root.go("behavior")
+                OneLineListItem:
+                    text: "Medical Info"
+                    on_release: root.go("medical")
+                OneLineListItem:
+                    text: "Emergency Contacts"
+                    on_release: root.go("emergency")
+
+<GradesScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Grades"
+            left_action_items: [["arrow-left", lambda x: root.manager.current == "home" or setattr(root.manager, "current", "home")]]
+        MDLabel:
+            text: root.status
+            halign: "center"
+            size_hint_y: None
+            height: "32dp"
+        ScrollView:
+            MDList:
+                id: grade_list
+
+<MissingScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Missing Assignments"
+            left_action_items: [["arrow-left", lambda x: setattr(root.manager, "current", "home")]]
+        MDLabel:
+            text: root.status
+            halign: "center"
+            size_hint_y: None
+            height: "32dp"
+        ScrollView:
+            MDList:
+                id: missing_list
+
+<ScheduleScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Schedule"
+            left_action_items: [["arrow-left", lambda x: setattr(root.manager, "current", "home")]]
+        ScrollView:
+            MDList:
+                id: schedule_list
+
+<CreditsScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Credits"
+            left_action_items: [["arrow-left", lambda x: setattr(root.manager, "current", "home")]]
+        MDLabel:
+            text: root.summary_text
+            halign: "center"
+            size_hint_y: None
+            height: "48dp"
+        ScrollView:
+            MDList:
+                id: credits_list
+
+<MedicalScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Medical"
+            left_action_items: [["arrow-left", lambda x: setattr(root.manager, "current", "home")]]
+        MDLabel:
+            text: root.info_text
+            halign: "left"
+            padding: "16dp"
+
+<EmergencyScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Emergency Contacts"
+            left_action_items: [["arrow-left", lambda x: setattr(root.manager, "current", "home")]]
+        ScrollView:
+            MDList:
+                id: emergency_list
+
+<BehaviorScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "Behavior"
+            left_action_items: [["arrow-left", lambda x: setattr(root.manager, "current", "home")]]
+        ScrollView:
+            MDList:
+                id: behavior_list
+
+<TeacherSectionsScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        MDTopAppBar:
+            title: "My Sections"
+            left_action_items: [["arrow-left", lambda x: setattr(root.manager, "current", "login")]]
+        ScrollView:
+            MDList:
+                id: sections_list

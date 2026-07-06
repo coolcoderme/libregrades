@@ -1,0 +1,20 @@
+{% extends "portal/base.html" %}
+{% block title %}Behavior{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Behavior — {{ student.full_name }}</h1>
+<table class="table">
+  <thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Consequence</th></tr></thead>
+  <tbody>
+    {% for i in incidents %}
+    <tr>
+      <td>{{ i.incident_date }}</td>
+      <td><span class="badge {% if i.incident_type == 'positive' %}bg-success{% else %}bg-warning{% endif %}">{{ i.get_incident_type_display }}</span></td>
+      <td>{{ i.description }}</td>
+      <td>{{ i.consequence|default:"—" }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="text-muted">No incidents recorded.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
