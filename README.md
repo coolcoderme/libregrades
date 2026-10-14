@@ -120,4 +120,4 @@ docs/             Deployment guide
 
 ## License
 
-Open source — deploy on your own servers with no license fees.
+MIT License — open source, deploy on your own servers with no license fees. See [LICENSE](LICENSE).
